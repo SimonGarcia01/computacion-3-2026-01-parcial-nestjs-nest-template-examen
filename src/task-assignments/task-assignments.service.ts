@@ -1,26 +1,38 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+
+import { UsersService } from '@/users/users.service';
+import { TasksService } from '@/tasks/tasks.service';
+
+import { TaskAssignment } from './entities/task-assignment.entity';
 import { CreateTaskAssignmentDto } from './dto/create-task-assignment.dto';
-import { UpdateTaskAssignmentDto } from './dto/update-task-assignment.dto';
 
 @Injectable()
 export class TaskAssignmentsService {
-  create(createTaskAssignmentDto: CreateTaskAssignmentDto) {
-    return 'This action adds a new taskAssignment';
-  }
+    constructor(
+        @InjectRepository(TaskAssignment)
+        private readonly taskAssignmentRepository: Repository<TaskAssignment>,
+        private readonly userService: UsersService,
+        private readonly taskService: TasksService,
+    ) {}
 
-  findAll() {
-    return `This action returns all taskAssignments`;
-  }
+    async create(createTaskAssignmentDto: CreateTaskAssignmentDto): Promise<TaskAssignment | null> {
+        const user = await this.userService.findOne(createTaskAssignmentDto.userId);
+        if (!user) throw new NotFoundException();
 
-  findOne(id: number) {
-    return `This action returns a #${id} taskAssignment`;
-  }
+        const task = await this.taskService.findOne(createTaskAssignmentDto.taskId);
+        if (!task) throw new NotFoundException();
 
-  update(id: number, updateTaskAssignmentDto: UpdateTaskAssignmentDto) {
-    return `This action updates a #${id} taskAssignment`;
-  }
+        const newTaskAssignment = this.taskAssignmentRepository.create({
+            user: user,
+            task: task,
+            createdAt: new Date(),
+        });
+        return this.taskAssignmentRepository.save(newTaskAssignment);
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} taskAssignment`;
-  }
+    async findAll(): Promise<TaskAssignment[]> {
+        return this.taskAssignmentRepository.find();
+    }
 }

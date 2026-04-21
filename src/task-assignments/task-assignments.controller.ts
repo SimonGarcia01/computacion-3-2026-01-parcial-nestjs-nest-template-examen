@@ -8,12 +8,12 @@ export class TaskAssignmentsController {
     constructor(private readonly taskAssignmentsService: TaskAssignmentsService) {}
 
     @Post()
-    create(@Body() createTaskAssignmentDto: CreateTaskAssignmentDto) {
-        return this.taskAssignmentsService.create(createTaskAssignmentDto);
+    async create(@Body() createTaskAssignmentDto: CreateTaskAssignmentDto) {
+        return await this.taskAssignmentsService.create(createTaskAssignmentDto);
     }
 
     @Get()
-    findAll() {
-        return this.taskAssignmentsService.findAll();
+    async findAll() {
+        return await this.taskAssignmentsService.findAll();
     }
 }

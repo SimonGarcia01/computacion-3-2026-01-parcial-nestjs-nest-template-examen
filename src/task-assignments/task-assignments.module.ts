@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { User } from '@/users/entities/user.entity';
-import { Task } from '@/tasks/entities/task.entity';
+import { UsersModule } from '@/users/users.module';
+import { TasksModule } from '@/tasks/tasks.module';
 
 import { TaskAssignmentsService } from './task-assignments.service';
 import { TaskAssignmentsController } from './task-assignments.controller';
 import { TaskAssignment } from './entities/task-assignment.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([TaskAssignment, User, Task])],
+    imports: [TypeOrmModule.forFeature([TaskAssignment]), UsersModule, TasksModule],
     controllers: [TaskAssignmentsController],
     providers: [TaskAssignmentsService],
 })

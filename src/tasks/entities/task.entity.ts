@@ -28,8 +28,7 @@ export class Task {
     @JoinColumn({ name: 'project_id' })
     project!: Project;
 
-    @OneToMany(() => Task, (task) => task.parentTask, { eager: true })
-    @JoinColumn()
+    @OneToMany(() => Task, (task) => task.parentTask, { eager: false })
     tasks!: Task[];
 
     @ManyToOne(() => Task, (task) => task.tasks, { nullable: true })
@@ -39,6 +38,6 @@ export class Task {
     @Column({ name: 'created_at', type: 'timestamp' })
     createdAt!: Date;
 
-    @OneToMany(() => TaskAssignment, (taskAssignment) => taskAssignment.task, { eager: true })
+    @OneToMany(() => TaskAssignment, (taskAssignment) => taskAssignment.task, { eager: false })
     taskAssignments!: TaskAssignment[];
 }

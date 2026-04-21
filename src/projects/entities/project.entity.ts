@@ -16,6 +16,6 @@ export class Project {
     @Column({ name: 'created_at', type: 'timestamp' })
     createdAt!: Date;
 
-    @OneToMany(() => Task, (task) => task.project, { eager: true })
+    @OneToMany(() => Task, (task) => task.project, { eager: false })
     tasks!: Task[];
 }
