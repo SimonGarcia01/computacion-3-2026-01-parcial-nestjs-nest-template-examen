@@ -21,5 +21,5 @@ export class CreateTaskDto {
     @IsOptional()
     @IsInt()
     @IsPositive()
-    parentTask?: number;
+    parentTaskId?: number;
 }
